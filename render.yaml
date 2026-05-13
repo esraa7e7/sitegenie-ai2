@@ -33,7 +33,7 @@ services:
       cd apps/frontend
       npm install --legacy-peer-deps --no-audit --no-fund
       npm run build
-    publishDir: apps/frontend/dist
+    publishPath: apps/frontend/dist
     envVars:
       - key: NODE_VERSION
         value: 22.13.0
