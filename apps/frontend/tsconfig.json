@@ -18,14 +18,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./apps/frontend/src/*"],
-      "@sitegenie/ai-core": ["../../packages/ai-core/src/index.ts"],
-      "@sitegenie/ai-core/*": ["../../packages/ai-core/src/*"],
-      "@sitegenie/shared": ["../../packages/shared/src/index.ts"],
-      "@sitegenie/shared/*": ["../../packages/shared/src/*"],
-      "@sitegenie/ui": ["../../packages/ui/src/index.ts"],
-      "@sitegenie/ui/*": ["../../packages/ui/src/*"],
-      "@sitegenie/config": ["../../packages/config/src/index.ts"],
-      "@sitegenie/config/*": ["../../packages/config/src/*"]
+      "@sitegenie/ai-core": ["packages/ai-core/src/index.ts"],
+      "@sitegenie/ai-core/*": ["packages/ai-core/src/*"],
+      "@sitegenie/shared": ["packages/shared/src/index.ts"],
+      "@sitegenie/shared/*": ["packages/shared/src/*"],
+      "@sitegenie/ui": ["packages/ui/src/index.ts"],
+      "@sitegenie/ui/*": ["packages/ui/src/*"],
+      "@sitegenie/config": ["packages/config/src/index.ts"],
+      "@sitegenie/config/*": ["packages/config/src/*"]
     },
     "types": ["vite/client", "node"],
     "allowImportingTsExtensions": true,
@@ -41,11 +41,7 @@
     "packages/*/src/**/*",
     "packages/*/src/**/*.ts",
     "packages/*/src/**/*.tsx",
-    "packages/*/src/**/*.d.ts",
-    "packages/ai-core/src/**/*",
-    "packages/shared/src/**/*",
-    "packages/ui/src/**/*",
-    "packages/config/src/**/*"
+    "packages/*/src/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",
@@ -57,8 +53,5 @@
     "**/*.test.tsx",
     "**/*.spec.ts",
     "**/*.spec.tsx"
-  ],
-  "references": [
-    { "path": "./tsconfig.node.json" }
   ]
 }
