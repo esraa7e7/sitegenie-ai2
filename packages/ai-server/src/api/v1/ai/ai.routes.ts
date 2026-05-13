@@ -1,0 +1,16 @@
+import { Router } from 'express';
+import { AIController } from './ai.controller.js';
+import { authenticate } from '../../../middleware/auth.middleware.js';
+import { apiLimiter, aiGenerationLimiter } from '../../../middleware/rate-limit.middleware.js';
+
+const router = Router();
+
+router.use(authenticate);
+
+router.post('/generate', aiGenerationLimiter, AIController.generate);
+router.get('/generate/stream/:projectId', AIController.streamGenerate);
+router.post('/chat', apiLimiter, AIController.chat);
+router.post('/deploy', apiLimiter, AIController.deploy);
+router.get('/status/:id', apiLimiter, AIController.getStatus);
+
+export default router;

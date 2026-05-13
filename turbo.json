@@ -1,0 +1,84 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "version": "1",
+  "globalDependencies": [
+    "**/.env",
+    "**/.env.local",
+    ".git/config"
+  ],
+  "tasks": {
+    "build": {
+      "description": "Build all packages",
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"],
+      "cache": true,
+      "env": ["NODE_ENV"]
+    },
+    "dev": {
+      "description": "Start development mode",
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "test": {
+      "description": "Run tests",
+      "cache": true,
+      "outputs": ["coverage/**"],
+      "env": ["NODE_ENV=test"]
+    },
+    "test:watch": {
+      "description": "Run tests in watch mode",
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "description": "Lint code",
+      "cache": true,
+      "outputs": [".eslintcache"]
+    },
+    "lint:fix": {
+      "description": "Fix linting issues",
+      "cache": false
+    },
+    "typecheck": {
+      "description": "Type check TypeScript",
+      "cache": true
+    },
+    "format": {
+      "description": "Format code with Prettier",
+      "cache": false
+    },
+    "db:generate": {
+      "description": "Generate Prisma client",
+      "cache": false,
+      "inputs": ["prisma/schema.prisma"]
+    },
+    "db:push": {
+      "description": "Push database schema",
+      "cache": false
+    },
+    "db:migrate": {
+      "description": "Run database migrations",
+      "cache": false
+    },
+    "db:studio": {
+      "description": "Open Prisma Studio",
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "description": "Clean build artifacts",
+      "cache": false
+    }
+  },
+  "globalEnv": [
+    "DEBUG",
+    "LOG_LEVEL",
+    "NODE_ENV"
+  ],
+  "ui": "tui",
+  "remoteCache": {
+    "enabled": false
+  }
+}
+

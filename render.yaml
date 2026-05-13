@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: sitegenie-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build:server
+    startCommand: npm run start:server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: E2B_API_KEY
+        sync: false
+
+  - type: web
+    name: sitegenie-frontend
+    runtime: static
+    plan: free
+    buildCommand: npm install && npm run build:client
+    staticPublishPath: apps/builder/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: sitegenie-api
+          property: host

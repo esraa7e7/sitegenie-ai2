@@ -1,0 +1,219 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sitegenie
+  labels:
+    name: sitegenie
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sitegenie-config
+  namespace: sitegenie
+data:
+  NODE_ENV: production
+  LOG_LEVEL: info
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sitegenie-secrets
+  namespace: sitegenie
+type: Opaque
+data:
+  database-url: {} # Base64 encoded
+  redis-url: {} # Base64 encoded
+  jwt-secret: {} # Base64 encoded
+  api-keys: {} # Base64 encoded
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: sitegenie-db
+  namespace: sitegenie
+spec:
+  instances: 3
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+    storageClass: standard-rwo
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sitegenie-api
+  namespace: sitegenie
+  labels:
+    app: sitegenie-api
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: sitegenie-api
+  template:
+    metadata:
+      labels:
+        app: sitegenie-api
+    spec:
+      serviceAccountName: sitegenie-api
+      containers:
+      - name: api
+        image: sitegenie/api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: sitegenie-config
+              key: NODE_ENV
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: sitegenie-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: sitegenie-secrets
+              key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: sitegenie-secrets
+              key: jwt-secret
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sitegenie-api
+  namespace: sitegenie
+  labels:
+    app: sitegenie-api
+spec:
+  type: ClusterIP
+  selector:
+    app: sitegenie-api
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: http
+
+---
+apiVersion: autoscaling.k8s.io/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sitegenie-api-hpa
+  namespace: sitegenie
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sitegenie-api
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: sitegenie-api-pdb
+  namespace: sitegenie
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: sitegenie-api
+
+---
+apiVersion: batch/v1
+kind: Deployment
+metadata:
+  name: sitegenie-workers
+  namespace: sitegenie
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sitegenie-workers
+  template:
+    metadata:
+      labels:
+        app: sitegenie-workers
+    spec:
+      containers:
+      - name: workers
+        image: sitegenie/workers:latest
+        imagePullPolicy: Always
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: sitegenie-config
+              key: NODE_ENV
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: sitegenie-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: sitegenie-secrets
+              key: redis-url
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"

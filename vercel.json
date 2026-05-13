@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build --workspace=@sitegenie/builder",
+  "outputDirectory": "apps/builder/dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

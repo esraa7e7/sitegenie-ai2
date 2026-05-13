@@ -1,0 +1,22 @@
+{
+  "name": "@sitegenie/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "nanoid": "^4.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
