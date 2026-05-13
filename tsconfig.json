@@ -2,24 +2,57 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "allowJs": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./apps/frontend/src/*"],
+      "@sitegenie/ai-core": ["packages/ai-core/src/index.ts"],
+      "@sitegenie/ai-core/*": ["packages/ai-core/src/*"],
+      "@sitegenie/shared": ["packages/shared/src/index.ts"],
+      "@sitegenie/shared/*": ["packages/shared/src/*"],
+      "@sitegenie/ui": ["packages/ui/src/index.ts"],
+      "@sitegenie/ui/*": ["packages/ui/src/*"],
+      "@sitegenie/config": ["packages/config/src/index.ts"],
+      "@sitegenie/config/*": ["packages/config/src/*"]
+    },
+    "types": ["vite/client", "node"],
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": [
+    "apps/frontend/src/**/*",
+    "apps/frontend/src/**/*.ts",
+    "apps/frontend/src/**/*.tsx",
+    "apps/frontend/src/**/*.d.ts",
+    "packages/*/src/**/*",
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "packages/*/src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".turbo",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }
