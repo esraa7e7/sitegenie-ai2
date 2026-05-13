@@ -1,11 +1,18 @@
 services:
+  # Backend API Service
   - type: web
     name: sitegenie-api
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build:server
+    buildCommand: |
+      npm install --legacy-peer-deps --no-audit --no-fund
+      npm run build:server
     startCommand: npm run start:server
     envVars:
+      - key: NODE_VERSION
+        value: 22.13.0
+      - key: NPM_VERSION
+        value: 11.0.0
       - key: NODE_ENV
         value: production
       - key: PORT
@@ -17,13 +24,21 @@ services:
       - key: E2B_API_KEY
         sync: false
 
+  # Frontend Static Service  
   - type: web
     name: sitegenie-frontend
     runtime: static
     plan: free
-    buildCommand: npm install && npm run build:client
-    staticPublishPath: apps/builder/dist
+    buildCommand: |
+      cd apps/frontend
+      npm install --legacy-peer-deps --no-audit --no-fund
+      npm run build
+    publishDir: apps/frontend/dist
     envVars:
+      - key: NODE_VERSION
+        value: 22.13.0
+      - key: NPM_VERSION
+        value: 11.0.0
       - key: VITE_API_URL
         fromService:
           type: web
