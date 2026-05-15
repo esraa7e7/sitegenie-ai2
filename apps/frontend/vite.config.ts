@@ -4,8 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/',  // تم التعديل من './' إلى '/'
-
+  base: '/',  // ← خليها كده مش './'
   server: {
     port: 5173,
     host: true,
@@ -17,18 +16,15 @@ export default defineConfig({
       },
     },
   },
-
   preview: {
     port: 4173,
     host: true,
   },
-
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-
   build: {
     outDir: 'dist',
     sourcemap: true,
@@ -38,7 +34,8 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
         },
       },
-      // تم إزالة external: ['date-fns'] - لا حاجة له
+      // شيل السطر ده لأنه غلط
+      // external: ['date-fns'],
     },
   },
 });
