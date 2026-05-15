@@ -1,25 +1,18 @@
-# Frontend build with Vite
+# Stage 1: Build
 FROM node:20-alpine AS builder
-
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
-
 COPY . .
-# تنفيذ أمر البناء الخاص بالفرونت إيند
 RUN npm run build:frontend
 
-# Nginx stage
+# Stage 2: Production (Nginx)
 FROM nginx:alpine
-
-# Copy configuration files
+# نسخ إعدادات Nginx (تأكد من وجود هذه الملفات في جهازك)
 COPY infrastructure/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY infrastructure/nginx/default.conf /etc/nginx/conf.d/default.conf
-
-# Copy build artifacts from builder stage
+# نسخ الملفات المستخرجة من البناء إلى مسار Nginx
 COPY --from=builder /app/dist/apps/web /usr/share/nginx/html
 
 EXPOSE 80 443
-
 CMD ["nginx", "-g", "daemon off;"]

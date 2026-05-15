@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     container_name: sitegenie-postgres
@@ -19,11 +18,9 @@ services:
       timeout: 5s
       retries: 5
 
-  # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: sitegenie-redis
-    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
     ports:
@@ -34,7 +31,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # API Server
   api:
     build:
       context: .
@@ -45,20 +41,12 @@ services:
       DATABASE_URL: postgresql://sitegenie:${DB_PASSWORD:-changeme}@postgres:5432/sitegenie
       REDIS_URL: redis://redis:6379
       PORT: 3000
-    ports:
-      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
 
-  # Frontend
   web:
     build:
       context: .
@@ -66,20 +54,17 @@ services:
     container_name: sitegenie-web
     ports:
       - "80:80"
-      - "443:443"
     depends_on:
       - api
     environment:
-      VITE_API_URL: http://api:3000
+      VITE_API_URL: http://localhost:3000 # للمتصفح، استخدم localhost أو الدومين
 
-  # Worker Pool
   workers:
     build:
       context: .
       dockerfile: infrastructure/docker/Dockerfile.workers
     container_name: sitegenie-workers
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
       DATABASE_URL: postgresql://sitegenie:${DB_PASSWORD:-changeme}@postgres:5432/sitegenie
       REDIS_URL: redis://redis:6379
     depends_on:
@@ -90,9 +75,7 @@ services:
 
 volumes:
   postgres_data:
-    driver: local
   redis_data:
-    driver: local
 
 networks:
   default:
