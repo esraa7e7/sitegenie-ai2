@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build --workspace=@sitegenie/frontend",
+  "outputDirectory": "apps/frontend/dist",
+  "framework": "vite",
+  "rootDirectory": "."
+}
