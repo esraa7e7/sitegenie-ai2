@@ -5,6 +5,8 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  
+  base: './', // لضمان عمل المسارات النسبية بشكل صحيح
 
   server: {
     port: 5173,
