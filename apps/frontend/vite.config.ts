@@ -2,9 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/',  // تم التعديل من './' إلى '/'
 
   server: {
     port: 5173,
@@ -38,6 +38,7 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
         },
       },
+      // تم إزالة external: ['date-fns'] - لا حاجة له
     },
   },
 });
