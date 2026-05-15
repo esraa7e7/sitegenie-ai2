@@ -38,6 +38,8 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
         },
       },
+      // إذا كان date-fns يسبب مشاكل في البناء
+      external: ['date-fns'],
     },
   },
 });
