@@ -9,7 +9,7 @@ RUN npm run build
 # Stage 2: Runtime
 FROM node:20-alpine
 WORKDIR /app
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init libatomic
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
 COPY --from=builder /app/node_modules ./node_modules

@@ -57,7 +57,7 @@ services:
     depends_on:
       - api
     environment:
-      VITE_API_URL: http://localhost:3000 # للمتصفح، استخدم localhost أو الدومين
+      VITE_API_URL: http://localhost:3000
 
   workers:
     build:
