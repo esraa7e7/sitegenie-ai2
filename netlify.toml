@@ -1,5 +1,7 @@
 [build]
-  command = "npm run build --workspace=@sitegenie/builder"
+  {
+  "outputDirectory": "apps/frontend/dist"
+}
   publish = "apps/builder/dist"
 
 [[redirects]]
