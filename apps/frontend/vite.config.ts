@@ -1,28 +1,12 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/',  // ← خليها كده مش './'
-  server: {
-    port: 5173,
-    host: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
-  preview: {
-    port: 4173,
-    host: true,
-  },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
@@ -34,8 +18,10 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
         },
       },
-      // شيل السطر ده لأنه غلط
-      // external: ['date-fns'],
     },
   },
-});
+  server: {
+    port: 5173,
+    allowedHosts: ['.trycloudflare.com'] // السطر ده اللي هيفتح لكِ الموقع أونلاين فوراً!
+  }
+})
