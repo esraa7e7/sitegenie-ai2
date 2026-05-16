@@ -3,24 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "npm@10.8.1",
   "workspaces": [
+    "infrastructure",
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:server\"",
-    "dev:frontend": "npm run dev --workspace=@sitegenie/frontend",
-    "dev:server": "tsx watch src/server.ts",
-    "build": "npm run build:all",
-    "build:all": "npm run build:frontend && npm run build:server",
-    "build:frontend": "npm run build --workspace=@sitegenie/frontend",
-    "build:server": "tsc -p tsconfig.server.json --skipLibCheck",
-    "build:frontend-only": "npm run build --workspace=@sitegenie/frontend",
-    "preview": "npm run preview --workspace=@sitegenie/frontend",
-    "preview:frontend": "npm run preview --workspace=@sitegenie/frontend",
-    "start": "node dist/server.js",
-    "start:frontend": "npm run preview --workspace=@sitegenie/frontend",
-    "clean": "rm -rf node_modules dist build .turbo apps/*/node_modules packages/*/node_modules",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "clean": "turbo run clean",
     "postinstall": "echo 'Postinstall completed - SiteGenie AI'"
   },
   "dependencies": {
