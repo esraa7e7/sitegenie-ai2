@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createClient } from "@supabase/supabase-js";
 import { jwtVerify } from "jose";
@@ -10,9 +9,11 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Route رئيسي للتحقق من عمل السيرفر
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -20,13 +21,12 @@ app.get("/", (req, res) => {
   });
 });
 
+// Route لتوليد المحتوى باستخدام Gemini AI
 app.post("/generate", async (req, res) => {
   try {
-
     // =========================
-    // JWT Validation
+    // التحقق من صحة JWT
     // =========================
-
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -41,19 +41,13 @@ app.post("/generate", async (req, res) => {
       process.env.SUPABASE_JWT_SECRET
     );
 
-    const { payload } = await jwtVerify(
-      token,
-      secret
-    );
+    const { payload } = await jwtVerify(token, secret);
 
-    console.log(
-      `[Backend] User authenticated: ${payload.sub}`
-    );
+    console.log(`[Backend] User authenticated: ${payload.sub}`);
 
     // =========================
-    // Request Body
+    // بيانات الطلب
     // =========================
-
     const { prompt, userAppId } = req.body;
 
     if (!prompt) {
@@ -63,9 +57,8 @@ app.post("/generate", async (req, res) => {
     }
 
     // =========================
-    // Supabase
+    // الاتصال بـ Supabase
     // =========================
-
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -84,34 +77,26 @@ app.post("/generate", async (req, res) => {
     }
 
     // =========================
-    // Temporary Decryption
+    // فك التشفير (مؤقت)
+    // سيتم استبداله لاحقاً بنظام تشفير آمن
     // =========================
-    // Replace later with your secure encryption system
-
     const decryptedKey = data.encrypted_gemini_key;
 
     // =========================
-    // Gemini AI
+    // استخدام Gemini AI
     // =========================
-
-    const genAI = new GoogleGenerativeAI(
-      decryptedKey
-    );
+    const genAI = new GoogleGenerativeAI(decryptedKey);
 
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-pro"
     });
 
-    const result = await model.generateContent(
-      prompt
-    );
-
+    const result = await model.generateContent(prompt);
     const text = result.response.text();
 
     // =========================
-    // Response
+    // إرسال الرد
     // =========================
-
     return res.json({
       success: true,
       content: text,
@@ -121,7 +106,6 @@ app.post("/generate", async (req, res) => {
     });
 
   } catch (error) {
-
     console.error(error);
 
     return res.status(500).json({
@@ -130,10 +114,12 @@ app.post("/generate", async (req, res) => {
   }
 });
 
+// تشغيل السيرفر
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT}`
-  );
+  console.log(`Server running on port ${PORT}`);
 });
+
+// تصدير app للاستخدام في الاختبارات أو التكامل
+export default app;
