@@ -5,7 +5,8 @@
       "src": "packages/ai-server/dist/server.js",
       "use": "@vercel/node",
       "config": {
-        "runtime": "nodejs24.x"
+        "runtime": "nodejs24.x",
+        "includeFiles": ["packages/ai-server/**"]
       }
     }
   ],
@@ -14,10 +15,5 @@
       "src": "/(.*)",
       "dest": "packages/ai-server/dist/server.js"
     }
-  ],
-  "functions": {
-    "packages/ai-server/dist/server.js": {
-      "runtime": "nodejs24.x"
-    }
-  }
+  ]
 }
