@@ -1,3 +1,4 @@
+```json
 {
   "$schema": "https://turbo.build/schema.json",
   "version": "1",
@@ -79,6 +80,11 @@
   "ui": "tui",
   "remoteCache": {
     "enabled": false
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   }
 }
-
+```
