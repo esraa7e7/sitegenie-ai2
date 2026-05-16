@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "packages/ai-server/dist/server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "runtime": "nodejs24.x"
+      }
     }
   ],
   "routes": [
@@ -11,5 +14,10 @@
       "src": "/(.*)",
       "dest": "packages/ai-server/dist/server.js"
     }
-  ]
+  ],
+  "functions": {
+    "packages/ai-server/dist/server.js": {
+      "runtime": "nodejs24.x"
+    }
+  }
 }
