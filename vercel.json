@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -8,5 +9,20 @@
       "source": "/(.*)",
       "destination": "/apps/frontend/dist/$1"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.ts": {
+      "runtime": "nodejs20.x",
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "build": {
+    "env": {
+      "PRISMA_GENERATE_DATAPROXY": "true"
+    }
+  },
+  "installCommand": "npm install --workspaces",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "apps/frontend/dist"
 }
