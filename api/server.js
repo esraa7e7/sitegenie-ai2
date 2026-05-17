@@ -85,4 +85,12 @@ app.post("/generate", async (req, res) => {
   }
 });
 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 SiteGenie AI Backend Started Successfully!`);
+  console.log(`Node Version: ${process.version}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`Server listening on port ${PORT}`);
+});
+
 export default app;
