@@ -1,25 +1,4 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { createClient } from "@supabase/supabase-js";
-import { jwtVerify } from "jose";
 
-dotenv.config();
-
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Route رئيسي للتحقق من عمل السيرفر
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "SiteGenie Backend Running"
-  });
-});
 
 // Route لتوليد المحتوى باستخدام Gemini AI
 app.post("/generate", async (req, res) => {
