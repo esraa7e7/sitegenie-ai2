@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* تخصيص شريط التمرير - يدعم كل المتصفحات */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8b5cf6;
+}
+
+/* لدعم Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #1e293b;
+}
+
+/* إعدادات أساسية محسّنة */
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #020617;
+  color: #f8fafc;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Box sizing للكل */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* تأثير التوهج الجاهز للاستخدام */
+.glow {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.glow:hover {
+  box-shadow: 0 0 45px rgba(99, 102, 241, 0.6);
+}
+
+/* اختياري: منع تحديد النص على بعض العناصر */
+.no-select {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
