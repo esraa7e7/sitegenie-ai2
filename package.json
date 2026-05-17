@@ -12,9 +12,10 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "turbo run build",
+    "build": "prisma generate && prisma migrate deploy && npm run build:all",
+    "build:all": "turbo run build",
     "clean": "turbo run clean",
-    "postinstall": "turbo prune --scope=@sitegenie-ai/frontend --no-deps && cd out && npm install --omit=dev"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.0",
@@ -52,8 +53,7 @@
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=20.x",
+    "node": "20.x",
     "npm": ">=10.0.0"
-  },
-  "engineStrict": true
+  }
 }
