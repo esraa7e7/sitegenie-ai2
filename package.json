@@ -12,8 +12,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "prisma generate && prisma migrate deploy && npm run build:all",
-    "build:all": "turbo run build",
+    "build": "prisma generate && prisma migrate deploy && turbo run build",
     "clean": "turbo run clean",
     "postinstall": "prisma generate"
   },
@@ -53,7 +52,6 @@
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": "20.x",
-    "npm": ">=10.0.0"
+    "node": "20.x"
   }
 }
