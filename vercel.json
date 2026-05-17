@@ -2,22 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "packages/ai-server/src/server.js",
+      "src": "api/server.js",
       "use": "@vercel/node",
       "config": {
-        "runtime": "nodejs24.x",
-        "includeFiles": ["packages/ai-server/**"]
+        "runtime": "nodejs20.x"
       }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "packages/ai-server/dist/server.js"
-    },
-    {
       "src": "/(.*)",
-      "dest": "packages/ai-server/dist/server.js"
+      "dest": "api/server.js"
     }
   ]
 }
