@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Plus, MoreVertical, Eye, Code, Globe } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { projectApi } from '../lib/api';
+import { toast } from 'sonner';
 
 interface Project {
   id: string;
@@ -9,17 +13,27 @@ interface Project {
   thumbnail?: string;
 }
 
-interface DashboardViewProps {
-  onNewProject: () => void;
-  onSelectProject: (id: string) => void;
-}
+export const DashboardView: React.FC = () => {
+  const navigate = useNavigate();
 
-export const DashboardView: React.FC<DashboardViewProps> = ({ onNewProject, onSelectProject }) => {
-  const [projects] = useState<Project[]>([
-    { id: '1', name: 'Coffee Brand Landing', description: 'A modern landing page for a coffee subscription brand.', lastUpdated: '2 hours ago' },
-    { id: '2', name: 'SaaS Analytics Dashboard', description: 'Enterprise-grade dashboard for data visualization.', lastUpdated: '1 day ago' },
-    { id: '3', name: 'Personal Portfolio v2', description: 'Minimalist portfolio with 3D elements.', lastUpdated: '3 days ago' },
-  ]);
+  const { data: projects, isLoading, error } = useQuery<Project[]>({ // Specify type
+    queryKey: ['projects'],
+    queryFn: projectApi.list,
+    onError: (err: any) => {
+      toast.error(err.message || 'Failed to load projects.');
+    },
+  });
+
+  const handleNewProject = () => {
+    navigate('/editor');
+  };
+
+  const handleSelectProject = (id: string) => {
+    navigate(`/editor/${id}`);
+  };
+
+  if (isLoading) return <div>Loading projects...</div>;
+  if (error) return <div>Error loading projects. Please try again.</div>;
 
   return (
     <div className="pt-24 min-h-screen bg-black px-6" id="dashboard-container">
@@ -31,7 +45,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNewProject, onSe
           </div>
           <button 
             id="new-project-btn"
-            onClick={onNewProject}
+            onClick={handleNewProject}
             className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-indigo-500 transition-all flex items-center gap-2 group shadow-xl shadow-indigo-600/20 active:scale-95"
           >
             <Plus className="w-5 h-5 transition-transform group-hover:rotate-90" />
@@ -40,10 +54,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNewProject, onSe
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((p) => (
+          {projects?.map((p) => (
             <div 
               key={p.id} 
-              onClick={() => onSelectProject(p.id)}
+              onClick={() => handleSelectProject(p.id)}
               className="group relative bg-white/5 border border-white/5 rounded-[32px] overflow-hidden hover:bg-white/10 transition-all cursor-pointer"
             >
               <div className="aspect-video bg-neutral-900 flex items-center justify-center p-8 border-b border-white/5">
@@ -69,7 +83,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNewProject, onSe
           ))}
           
           <button 
-            onClick={onNewProject}
+            onClick={handleNewProject}
             className="flex flex-col items-center justify-center gap-4 p-8 rounded-[32px] border-2 border-dashed border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all text-neutral-500 hover:text-indigo-400 min-h-[300px]"
           >
             <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
