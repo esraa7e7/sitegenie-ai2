@@ -1,5 +1,3 @@
-
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -18,9 +16,8 @@ export const generateSite = async (req, res) => {
   try {
     // TODO: Add authentication logic here if needed
 
-    const { userPrompt } = req.body; // البرومبت اللي كتبه العميل في الـ UI
+    const { userPrompt } = req.body;
 
-    // هنا بنحط البرومبت اللي فوق بالظبط باستخدام الـ Backticks (``)
     const systemPrompt = `You are a strict, production-grade JSON generator. Your sole purpose is to output valid, minified JSON that represents a website configuration. The JSON you output will directly populate a JavaScript object used to render a website. Therefore, it MUST be perfectly formed, with no extraneous characters, comments, or explanations. Do NOT include any markdown formatting like ```json. Just the raw, minified JSON. The JSON should conform to the WebsiteConfig type definition.`;
 
     const response = await hf.chatCompletion({

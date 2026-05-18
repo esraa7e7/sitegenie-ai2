@@ -1,3 +1,12 @@
+---
+title: abas
+emoji: 🚀
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # SiteGenie AI - Enterprise-Grade AI SaaS Platform 🚀
 
 An enterprise-ready, globally scalable AI-powered website and application generation platform. Compete with Google AI Studio, Bolt.new, Lovable, V0.dev, and other leading AI builder platforms.
