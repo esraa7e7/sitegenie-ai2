@@ -3,15 +3,24 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "api/index.ts"
+    },
+    {
+      "source": "/ai/(.*)",
+      "destination": "packages/ai-server/src/server.js"
     },
     {
       "source": "/(.*)",
-  "destination": "/index.html"
+      "destination": "/apps/frontend/dist/index.html"
     }
   ],
   "functions": {
     "api/index.ts": {
+      "runtime": "nodejs20.x",
+      "memory": 1024,
+      "maxDuration": 10
+    },
+    "packages/ai-server/src/server.js": {
       "runtime": "nodejs20.x",
       "memory": 1024,
       "maxDuration": 10
@@ -24,5 +33,5 @@
   },
   "installCommand": "npm install --workspaces",
   "buildCommand": "npm run build:vercel",
-  "outputDirectory": "apps/frontend/dist"
+  "outputDirectory": "./apps/frontend/dist"
 }

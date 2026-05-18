@@ -1,11 +1,21 @@
 
 
-// Route لتوليد المحتوى باستخدام Gemini AI
+import express from "express";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { jwtVerify } from "jose";
+import { createClient } from "@supabase/supabase-js";
+import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
 app.post("/generate", async (req, res) => {
   try {
-    // =========================
-    // التحقق من صحة JWT
-    // =========================
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -24,9 +34,6 @@ app.post("/generate", async (req, res) => {
 
     console.log(`[Backend] User authenticated: ${payload.sub}`);
 
-    // =========================
-    // بيانات الطلب
-    // =========================
     const { prompt, userAppId } = req.body;
 
     if (!prompt) {
@@ -35,9 +42,6 @@ app.post("/generate", async (req, res) => {
       });
     }
 
-    // =========================
-    // الاتصال بـ Supabase
-    // =========================
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -55,15 +59,8 @@ app.post("/generate", async (req, res) => {
       });
     }
 
-    // =========================
-    // فك التشفير (مؤقت)
-    // سيتم استبداله لاحقاً بنظام تشفير آمن
-    // =========================
     const decryptedKey = data.encrypted_gemini_key;
 
-    // =========================
-    // استخدام Gemini AI
-    // =========================
     const genAI = new GoogleGenerativeAI(decryptedKey);
 
     const model = genAI.getGenerativeModel({
@@ -73,9 +70,6 @@ app.post("/generate", async (req, res) => {
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
-    // =========================
-    // إرسال الرد
-    // =========================
     return res.json({
       success: true,
       content: text,
@@ -93,12 +87,13 @@ app.post("/generate", async (req, res) => {
   }
 });
 
-// تشغيل السيرفر
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 SiteGenie AI Backend Started Successfully!`);
+  console.log(`Node Version: ${process.version}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`Server listening on port ${PORT}`);
 });
 
-// تصدير app للاستخدام في الاختبارات أو التكامل
 export default app;
