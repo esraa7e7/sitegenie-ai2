@@ -4,6 +4,9 @@ COPY package*.json ./
 COPY **/package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
+# Install turbo globally so the build command can find it
+RUN npm install -g turbo
+# Inject dummy environment variables
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN npm run build
