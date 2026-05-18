@@ -1,8 +1,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-COPY packages/ ./packages
-COPY api/ ./api
+COPY **/package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
