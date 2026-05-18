@@ -237,8 +237,7 @@ export function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   const result = {} as Pick<T, K>;
   keys.forEach((key) => {
     if (key in obj) {
-      // @ts-ignore
-      result[key] = obj[key];
+      result[key] = obj[key] as Pick<T, K>[K];
     }
   });
   return result;
