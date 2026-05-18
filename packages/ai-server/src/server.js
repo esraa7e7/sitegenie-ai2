@@ -1,11 +1,11 @@
 
 
 import express from "express";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { jwtVerify } from "jose";
-import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 import dotenv from "dotenv";
+import { HfInference } from "@huggingface/inference";
+
+const hf = new HfInference(process.env.HF_TOKEN);
 
 dotenv.config();
 
@@ -14,78 +14,39 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/generate", async (req, res) => {
+export const generateSite = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
+    // TODO: Add authentication logic here if needed
 
-    if (!authHeader) {
-      return res.status(401).json({
-        error: "Missing auth token"
-      });
-    }
+    const { userPrompt } = req.body; // البرومبت اللي كتبه العميل في الـ UI
 
-    const token = authHeader.split(" ")[1];
+    // هنا بنحط البرومبت اللي فوق بالظبط باستخدام الـ Backticks (``)
+    const systemPrompt = `You are a strict, production-grade JSON generator. Your sole purpose is to output valid, minified JSON that represents a website configuration. The JSON you output will directly populate a JavaScript object used to render a website. Therefore, it MUST be perfectly formed, with no extraneous characters, comments, or explanations. Do NOT include any markdown formatting like ```json. Just the raw, minified JSON. The JSON should conform to the WebsiteConfig type definition.`;
 
-    const secret = new TextEncoder().encode(
-      process.env.SUPABASE_JWT_SECRET
-    );
-
-    const { payload } = await jwtVerify(token, secret);
-
-    console.log(`[Backend] User authenticated: ${payload.sub}`);
-
-    const { prompt, userAppId } = req.body;
-
-    if (!prompt) {
-      return res.status(400).json({
-        error: "Prompt is required"
-      });
-    }
-
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
-
-    const { data, error } = await supabase
-      .from("user_apps")
-      .select("encrypted_gemini_key")
-      .eq("id", userAppId)
-      .single();
-
-    if (error || !data) {
-      return res.status(400).json({
-        error: "API key not configured"
-      });
-    }
-
-    const decryptedKey = data.encrypted_gemini_key;
-
-    const genAI = new GoogleGenerativeAI(decryptedKey);
-
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro"
+    const response = await hf.chatCompletion({
+      model: "Qwen/Qwen3.6-35B-A3B", // الموديل القوي في الأكواد
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Generate a custom website for: ${userPrompt}` }
+      ],
+      max_tokens: 2000,
+      temperature: 0.2 // درجة حرارة منخفضة جداً عشان يلتزم بالـ JSON وميجودش من عنده
     });
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const aiText = response.choices[0].message.content.trim();
+    
+    // تحويل النص الراجع لـ JSON حقيقي قبل ما نبعته للـ Front-end
+    const cleanJsonData = JSON.parse(aiText);
 
-    return res.json({
-      success: true,
-      content: text,
-      metadata: {
-        server_processed: true
-      }
-    });
+    return res.status(200).json({ success: true, websiteConfig: cleanJsonData });
 
   } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      error: error.message || "Internal Server Error"
-    });
+    console.error("Parsing or AI generation error:", error);
+    return res.status(500).json({ success: false, error: "فشل توليد هيكل الموقع، تأكد من الـ Prompt" });
   }
-});
+};
+
+app.post("/generate", generateSite);
 
 const PORT = process.env.PORT || 3000;
 
