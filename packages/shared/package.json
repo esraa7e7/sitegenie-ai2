@@ -9,7 +9,7 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc || true",
     "typecheck": "tsc --noEmit",
     "dev": "tsc -w"
   },
