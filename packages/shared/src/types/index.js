@@ -39,23 +39,6 @@ export var ProjectType;
     ProjectType["BLOG"] = "blog";
     ProjectType["CUSTOM"] = "custom";
 })(ProjectType || (ProjectType = {}));
-// ============================================================
-// AI AGENT TYPES
-// ============================================================
-export var AgentType;
-(function (AgentType) {
-    AgentType["PLANNER"] = "planner";
-    AgentType["UI"] = "ui";
-    AgentType["BACKEND"] = "backend";
-    AgentType["API"] = "api";
-    AgentType["REFACTOR"] = "refactor";
-    AgentType["DEBUG"] = "debug";
-    AgentType["SECURITY"] = "security";
-    AgentType["TESTING"] = "testing";
-    AgentType["DEPLOYMENT"] = "deployment";
-    AgentType["MEMORY"] = "memory";
-    AgentType["OPTIMIZATION"] = "optimization";
-})(AgentType || (AgentType = {}));
 export var TaskStatus;
 (function (TaskStatus) {
     TaskStatus["PENDING"] = "pending";

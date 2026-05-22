@@ -4,7 +4,7 @@
  */
 
 import { nanoid } from 'nanoid';
-import { AgentType, ProjectType, ProjectStatus } from "@sitegenie/shared";
+import { AgentType, ProjectType, ProjectStatus } from "@sitegenie/shared/types";
 import type {
   AgentTask,
   AgentInput,
@@ -15,8 +15,8 @@ import type {
   SEOConfig,
   AnalyticsConfig,
   ProjectMetadata,
-} from '@sitegenie/shared';
-import { generateAgentId, generateTaskId, getTimeDifferenceInSeconds } from '@sitegenie/shared';
+} from '@sitegenie/shared/types';
+import { generateAgentId, generateTaskId, getTimeDifferenceInSeconds } from '@sitegenie/shared/utils';
 import { BaseAgent } from './agents/BaseAgent.js';
 import { ContextMemory } from './memory.js';
 import {
@@ -195,12 +195,15 @@ export class AgentOrchestrator {
     const result = await agent.processTask(task, this.config.maxRetries);
     this.executionHistory.push(result);
     if (result.output) {
-      this.contextWindow.previousAgentOutputs[agent.agentType] = result.output;
-      this.contextWindow.currentState = {
-        ...this.contextWindow.currentState,
-        lastAgent: agent.agentType,
-        lastResult: result.output.result,
-      };
+      // Ensure result.output is not null or undefined before accessing properties
+      if (result.output.result !== undefined && result.output.result !== null) {
+        this.contextWindow.previousAgentOutputs[agent.agentType] = result.output;
+        this.contextWindow.currentState = {
+          ...this.contextWindow.currentState,
+          lastAgent: agent.agentType,
+          lastResult: result.output.result,
+        };
+      }
     }
 
     if (result.status === 'failed') {

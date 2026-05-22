@@ -2,7 +2,6 @@
  * Simplified Specialized AI Agents - cleaned to avoid parsing edge cases
  */
 import { BaseAgent } from './BaseAgent.js';
-import { AgentType } from '@sitegenie/shared';
 const createCodeFile = (language, path, content) => ({
     [language]: {
         language,

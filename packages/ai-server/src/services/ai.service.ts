@@ -1,6 +1,6 @@
 import { FileService } from './file.service.js';
 import { VfsService } from './vfs.service.js';
-import { AgentOrchestrator } from '@sitegenie/ai-core/src/orchestrator.js';
+import { AgentOrchestrator } from '@sitegenie/ai-core';
 
 export class AIService {
   private static orchestrator = new AgentOrchestrator({

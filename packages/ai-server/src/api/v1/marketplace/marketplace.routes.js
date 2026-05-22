@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { MarketplaceController } from './marketplace.controller.js';
+import { authenticate } from '../../../middleware/auth.middleware.js';
+const router = Router();
+router.use(authenticate);
+router.get('/', MarketplaceController.list);
+router.get('/:id', MarketplaceController.getById);
+router.post('/install', MarketplaceController.install);
+router.get('/project/:projectId', MarketplaceController.getInstalled);
+export default router;

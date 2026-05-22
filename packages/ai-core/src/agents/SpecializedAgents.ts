@@ -3,8 +3,8 @@
  */
 
 import { BaseAgent } from './BaseAgent.js';
-import { AgentType } from '@sitegenie/shared';
-import type { AgentInput, AgentOutput, ProjectCode } from '@sitegenie/shared';
+import { AgentType } from '@sitegenie/shared/types';
+import type { AgentInput, AgentOutput, ProjectCode } from '@sitegenie/shared/types';
 
 const createCodeFile = (language: string, path: string, content: string): ProjectCode => ({
   [language]: {

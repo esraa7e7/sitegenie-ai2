@@ -1,4 +1,16 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src"]
+"compilerOptions": {
+"composite": true,
+"declaration": true,
+"declarationMap": true,
+"outDir": "dist",
+"rootDir": "src"
+},
+"include": ["src"],
+"references": [
+  { "path": "../ai-core" },
+  { "path": "../common" },
+  { "path": "../shared" },
+  { "path": "../shared-types" }
+]
 }

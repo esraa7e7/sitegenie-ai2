@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "rootDir": "./",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@sitegenie/ai-core": ["../ai-core/src"],
+      "@sitegenie/common": ["../common/src"],
+      "@sitegenie/shared": ["../shared/src"],
+      "@sitegenie/shared-types": ["../shared-types/src"]
+    }
+  },
+  "include": ["./**/*.ts"],
+  "references": [
+    { "path": "../ai-core" },
+    { "path": "../common" },
+    { "path": "../shared" },
+    { "path": "../shared-types" }
+  ]
+}

@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sitegenie/shared": "*",
+    "@sitegenie/shared": "workspace:*",
     "winston": "^3.11.0"
   },
   "devDependencies": {

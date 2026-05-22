@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sitegenie/shared": "*",
+    "@sitegenie/shared": "workspace:*",
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "jose": "^5.9.6"

@@ -238,12 +238,15 @@ export class AgentOrchestrator {
         const result = await agent.processTask(task, this.config.maxRetries);
         this.executionHistory.push(result);
         if (result.output) {
-            this.contextWindow.previousAgentOutputs[agent.agentType] = result.output;
-            this.contextWindow.currentState = {
-                ...this.contextWindow.currentState,
-                lastAgent: agent.agentType,
-                lastResult: result.output.result,
-            };
+            // Ensure result.output is not null or undefined before accessing properties
+            if (result.output.result !== undefined && result.output.result !== null) {
+                this.contextWindow.previousAgentOutputs[agent.agentType] = result.output;
+                this.contextWindow.currentState = {
+                    ...this.contextWindow.currentState,
+                    lastAgent: agent.agentType,
+                    lastResult: result.output.result,
+                };
+            }
         }
         if (result.status === 'failed') {
             throw new Error(`${stage} failed: ${result.error?.message || 'unknown error'}`);

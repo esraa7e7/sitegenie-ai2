@@ -12,6 +12,7 @@
     "typescript": "latest"
   },
   "dependencies": {
-    "nanoid": "^5.0.0"
+    "nanoid": "^5.0.0",
+    "@sitegenie/shared": "workspace:*"
   }
 }

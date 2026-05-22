@@ -1,0 +1,1 @@
+{"version":3,"file":"server-security.d.ts","sourceRoot":"","sources":["server-security.ts"],"names":[],"mappings":"AAMA;;;GAGG;AACH,qBAAa,cAAc;IACzB,OAAO,CAAC,SAAS,CAAM;gBAEX,MAAM,EAAE,MAAM;IAK1B,OAAO,CAAC,IAAI,EAAE,MAAM,GAAG,MAAM;IAU7B,OAAO,CAAC,UAAU,EAAE,MAAM,GAAG,MAAM;CAYpC"}

@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { TeamController } from './team.controller.js';
+import { authenticate } from '../../../middleware/auth.middleware.js';
+const router = Router();
+router.use(authenticate);
+router.post('/', TeamController.create);
+router.get('/', TeamController.list);
+router.post('/invite', TeamController.invite);
+router.get('/:id/projects', TeamController.getProjects);
+export default router;

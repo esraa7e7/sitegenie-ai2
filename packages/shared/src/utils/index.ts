@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 /**
  * Generate a unique request ID for tracking

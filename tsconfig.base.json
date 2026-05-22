@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@sitegenie/shared": ["packages/shared/src"],
+      "@sitegenie/shared-types": ["packages/shared-types/src"],
+      "@sitegenie/ai-core": ["packages/ai-core/src"],
+      "@sitegenie/common": ["packages/common/src"],
+      "@sitegenie/logger": ["packages/logger/src"],
+      "@sitegenie/auth": ["packages/auth/src"]
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { diag, DiagLogLevel, SpanKind, SpanStatusCode, trace } from '@opentelemetry/api';
+import { DiagLogger, diag, DiagLogLevel, SpanKind, SpanStatusCode, trace, Attributes, AttributeValue } from '@opentelemetry/api';
 
 const DEFAULT_TRACER_NAME = 'sitegenie.common';
 const DEFAULT_TRACER_VERSION = '1.0.0';
@@ -9,10 +9,11 @@ export const initTracing = (serviceName = 'sitegenie') => {
       debug: console.debug.bind(console),
       error: console.error.bind(console),
       info: console.info.bind(console),
-      warn: console.warn.bind(console)
-    },
-    DiagLogLevel.INFO
-  );
+       warn: console.warn.bind(console),
+       verbose: console.debug.bind(console),
+     },
+     DiagLogLevel.INFO
+   );
 
   return trace.getTracer(serviceName, DEFAULT_TRACER_VERSION);
 };
@@ -30,23 +31,27 @@ export const runInSpan = async <T>(
     name,
     {
       kind: SpanKind.INTERNAL,
-      attributes
+      attributes: attributes as Attributes,
     },
-    async span => {
+    async (span) => {
       try {
         const result = await fn();
         span.setStatus({ code: SpanStatusCode.OK });
         return result;
       } catch (error: unknown) {
         span.recordException(error as Error);
-        span.setStatus({ code: SpanStatusCode.ERROR, message: (error as Error)?.message || String(error) });
+        span.setStatus({
+          code: SpanStatusCode.ERROR,
+          message: (error as Error)?.message || String(error),
+        });
         throw error;
       } finally {
         span.end();
       }
     }
-  );
+  ) as Promise<T>;
 };
+
 
 export const logger = {
   info: (message: string, meta?: Record<string, unknown>) => {
