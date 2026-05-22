@@ -148,7 +148,20 @@ export interface ProjectVersion {
     author: User;
     message: string;
 }
-export type AgentType = "planner" | "ui" | "backend" | "api" | "refactor" | "debug" | "security" | "testing" | "deployment" | "memory" | "optimization";
+export declare const AgentType: {
+    readonly PLANNER: "planner";
+    readonly UI: "ui";
+    readonly BACKEND: "backend";
+    readonly API: "api";
+    readonly REFACTOR: "refactor";
+    readonly DEBUG: "debug";
+    readonly SECURITY: "security";
+    readonly TESTING: "testing";
+    readonly DEPLOYMENT: "deployment";
+    readonly MEMORY: "memory";
+    readonly OPTIMIZATION: "optimization";
+};
+export type AgentType = typeof AgentType[keyof typeof AgentType];
 export declare enum TaskStatus {
     PENDING = "pending",
     PROCESSING = "processing",

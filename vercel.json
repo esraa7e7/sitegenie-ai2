@@ -7,7 +7,7 @@
     },
     {
       "source": "/ai/(.*)",
-      "destination": "packages/ai-server/src/server.js"
+      "destination": "packages/ai-server/dist/server.js"
     },
     {
       "source": "/(.*)",
@@ -20,7 +20,7 @@
       "memory": 1024,
       "maxDuration": 10
     },
-    "packages/ai-server/src/server.js": {
+    "packages/ai-server/dist/server.js": {
       "runtime": "nodejs20.x",
       "memory": 1024,
       "maxDuration": 10

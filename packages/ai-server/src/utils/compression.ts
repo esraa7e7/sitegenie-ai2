@@ -1,4 +1,4 @@
-import { gzipSync, gunzipSync } from 'fflate';
+import { gzipSync, gunzipSync } from 'node:zlib';
 
 /**
  * Compresses a string or object into a Gzipped Buffer.
@@ -6,14 +6,14 @@ import { gzipSync, gunzipSync } from 'fflate';
 export function compress(data: string | object): Buffer {
   const content = typeof data === 'string' ? data : JSON.stringify(data);
   const buf = Buffer.from(content, 'utf8');
-  return Buffer.from(gzipSync(new Uint8Array(buf)));
+  return gzipSync(buf);
 }
 
 /**
  * Decompresses a Gzipped Buffer back into its original form.
  */
 export function decompress(buffer: Buffer | Uint8Array): string {
-  const decompressed = gunzipSync(new Uint8Array(buffer));
+  const decompressed = gunzipSync(Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer));
   return Buffer.from(decompressed).toString('utf8');
 }
 

@@ -3,17 +3,18 @@
  */
 
 import { BaseAgent } from './BaseAgent.js';
-import { AgentType } from '@sitegenie/shared/types';
-import type { AgentInput, AgentOutput, ProjectCode } from '@sitegenie/shared/types';
+import { AgentType, AgentInput, AgentOutput, ProjectCode } from '@sitegenie/shared';
 
-const createCodeFile = (language: string, path: string, content: string): ProjectCode => ({
+type ProjectCodeLanguage = Exclude<keyof ProjectCode, 'config'>;
+
+const createCodeFile = (language: ProjectCodeLanguage, path: string, content: string): ProjectCode => ({
   [language]: {
     language,
     fileName: path.split('/').pop() || path,
     path,
     content,
   },
-});
+} as ProjectCode);
 
 function simpleOutput(message: string): AgentOutput {
   return { result: message, metadata: {} };

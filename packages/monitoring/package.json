@@ -5,13 +5,19 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sitegenie/shared": "*",
-    "@sitegenie/logger": "*",
+    "@sitegenie/shared": "workspace:*",
+    "@sitegenie/logger": "workspace:*",
     "prom-client": "^15.1.0"
   },
   "devDependencies": {

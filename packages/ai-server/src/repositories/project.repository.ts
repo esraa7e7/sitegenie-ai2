@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository.js';
-import { Project } from '@prisma/client';
+import type { Project } from '@prisma/client';
 
 export class ProjectRepository extends BaseRepository<Project> {
   constructor() {

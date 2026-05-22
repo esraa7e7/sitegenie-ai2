@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createClient } from "@supabase/supabase-js";
 import { jwtVerify } from "jose";
-import { ServerSecurity } from "@sitegenie/ai-core/dist/server-security";
+import { ServerSecurity } from "@sitegenie/ai-core";
 
 // Supabase Edge Function Handler Simulation
 export const sitegenieOrchestrator = async (req: Request) => {

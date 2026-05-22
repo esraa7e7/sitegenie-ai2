@@ -184,18 +184,21 @@ export interface ProjectVersion {
 // AI AGENT TYPES
 // ============================================================
 
-export type AgentType =
-  | "planner"
-  | "ui"
-  | "backend"
-  | "api"
-  | "refactor"
-  | "debug"
-  | "security"
-  | "testing"
-  | "deployment"
-  | "memory"
-  | "optimization";
+export const AgentType = {
+  PLANNER: 'planner',
+  UI: 'ui',
+  BACKEND: 'backend',
+  API: 'api',
+  REFACTOR: 'refactor',
+  DEBUG: 'debug',
+  SECURITY: 'security',
+  TESTING: 'testing',
+  DEPLOYMENT: 'deployment',
+  MEMORY: 'memory',
+  OPTIMIZATION: 'optimization',
+} as const;
+
+export type AgentType = typeof AgentType[keyof typeof AgentType];
 
 export enum TaskStatus {
   PENDING = 'pending',

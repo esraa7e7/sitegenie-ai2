@@ -58,8 +58,8 @@ export class ProjectService {
     // Write to disk AND cache
     await FileService.writeProjectFile(projectId, filePath, content);
     
-    const files = await VfsService.getProjectFiles(projectId);
-    const existingIndex = files.findIndex(f => f.path === filePath);
+    const files: Array<{ path: string; content: string }> = await VfsService.getProjectFiles(projectId);
+    const existingIndex = files.findIndex((f) => f.path === filePath);
     if (existingIndex > -1) {
       files[existingIndex].content = content;
     } else {

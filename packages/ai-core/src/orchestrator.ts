@@ -4,8 +4,10 @@
  */
 
 import { nanoid } from 'nanoid';
-import { AgentType, ProjectType, ProjectStatus } from "@sitegenie/shared/types";
-import type {
+import {
+  AgentType,
+  ProjectType,
+  ProjectStatus,
   AgentTask,
   AgentInput,
   ContextWindow,
@@ -15,8 +17,10 @@ import type {
   SEOConfig,
   AnalyticsConfig,
   ProjectMetadata,
-} from '@sitegenie/shared/types';
-import { generateAgentId, generateTaskId, getTimeDifferenceInSeconds } from '@sitegenie/shared/utils';
+  generateAgentId,
+  generateTaskId,
+  getTimeDifferenceInSeconds,
+} from '@sitegenie/shared';
 import { BaseAgent } from './agents/BaseAgent.js';
 import { ContextMemory } from './memory.js';
 import {

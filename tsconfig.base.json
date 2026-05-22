@@ -1,13 +1,24 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@sitegenie/shared": ["packages/shared/src"],
-      "@sitegenie/shared-types": ["packages/shared-types/src"],
-      "@sitegenie/ai-core": ["packages/ai-core/src"],
-      "@sitegenie/common": ["packages/common/src"],
-      "@sitegenie/logger": ["packages/logger/src"],
-      "@sitegenie/auth": ["packages/auth/src"]
+      "@sitegenie/shared": ["packages/shared/src/index.ts"],
+      "@sitegenie/shared-types": ["packages/shared-types/src/index.ts"],
+      "@sitegenie/ai-core": ["packages/ai-core/src/index.ts"],
+      "@sitegenie/common": ["packages/common/src/index.ts"],
+      "@sitegenie/logger": ["packages/logger/src/index.ts"],
+      "@sitegenie/auth": ["packages/auth/src/index.ts"]
     }
   }
 }

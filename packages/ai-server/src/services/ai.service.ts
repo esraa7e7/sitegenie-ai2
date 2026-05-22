@@ -16,9 +16,9 @@ export class AIService {
     const { MetricsService } = await import('./metrics.service.js');
 
     // 1. Prepare Context (Read existing files from VFS)
-    const files = await VfsService.getProjectFiles(projectId);
+    const files: Array<{ path: string; content: string }> = await VfsService.getProjectFiles(projectId);
     const context: Record<string, string> = {};
-    files.forEach(f => {
+    files.forEach((f) => {
       context[f.path] = f.content;
     });
 
