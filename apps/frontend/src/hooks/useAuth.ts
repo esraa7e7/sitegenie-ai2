@@ -23,7 +23,7 @@ export const useAuth = () => {
     );
 
     return () => {
-      authListener?.unsubscribe();
+    authListener?.subscription?.unsubscribe()
     };
   }, []);
 
