@@ -7,8 +7,13 @@ const TAG_LENGTH = 16;
  * NEVER import this in frontend code
  */
 export class ServerSecurity {
-    masterKey; // We'll let crypto handle types
     constructor(secret) {
+        Object.defineProperty(this, "masterKey", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        }); // We'll let crypto handle types
         // Generate a 32-byte key from the secret
         this.masterKey = crypto.scryptSync(secret, 'sitegenie-salt', 32);
     }

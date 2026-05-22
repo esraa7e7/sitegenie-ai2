@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -10,50 +11,38 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,
     "jsx": "react-jsx",
-    "ignoreDeprecations": "5.0",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./apps/frontend/src/*"],
-      "@sitegenie/ai-core": ["packages/ai-core/src/index.ts"],
-      "@sitegenie/ai-core/*": ["packages/ai-core/src/*"],
-      "@sitegenie/shared": ["packages/shared/src/index.ts"],
-      "@sitegenie/shared/*": ["packages/shared/src/*"],
-      "@sitegenie/ui": ["packages/ui/src/index.ts"],
-      "@sitegenie/ui/*": ["packages/ui/src/*"],
-      "@sitegenie/config": ["packages/config/src/index.ts"],
-      "@sitegenie/config/*": ["packages/config/src/*"]
-    },
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "types": ["vite/client", "node"],
-    // "allowImportingTsExtensions": true, // Removed as it requires noEmit or emitDeclarationOnly
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": false,
+    "paths": {
+      "@sitegenie/common": ["./packages/common/src/index.ts"],
+      "@sitegenie/common/*": ["./packages/common/src/*"],
+      "@sitegenie/shared": ["./packages/shared/src/index.ts"],
+      "@sitegenie/shared/*": ["./packages/shared/src/*"],
+      "@sitegenie/ai-core": ["./packages/ai-core/src/index.ts"],
+      "@sitegenie/ai-core/*": ["./packages/ai-core/src/*"]
+    }
   },
-  "include": [
-    "apps/frontend/src/**/*",
-    "apps/frontend/src/**/*.ts",
-    "apps/frontend/src/**/*.tsx",
-    "apps/frontend/src/**/*.d.ts",
-    "packages/*/src/**/*",
-    "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
-    "packages/*/src/**/*.d.ts"
-  ],
   "exclude": [
     "node_modules",
     "dist",
-    "build",
-    ".turbo",
-    "coverage",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/dist",
+    "apps/frontend/dist",
+    "apps/frontend/index-*.js",
+    "apps/frontend/vendor-*.js",
+    "apps/frontend/*.config.js",
+    "apps/frontend/*.css",
+    "apps/frontend_old",
+    "apps/frontend_old/dist",
+    "packages/**/dist"
   ]
 }
-

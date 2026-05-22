@@ -4,7 +4,6 @@
  */
 
 import { nanoid } from 'nanoid';
-import { nanoid } from 'nanoid';
 import { AgentType, ProjectType, ProjectStatus } from "@sitegenie/shared";
 import type {
   AgentTask,

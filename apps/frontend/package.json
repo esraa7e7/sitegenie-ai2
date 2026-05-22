@@ -24,7 +24,10 @@
     "sonner": "^1.7.0",
     "uuid": "14.0.0",
     "zod": "^3.23.8",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.13",
+    "clsx": "^2.1.1",
+    "recharts": "^2.9.0",
+    "tailwind-merge": "^1.15.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

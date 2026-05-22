@@ -39,4 +39,4 @@ USER nodejs
 EXPOSE 3000
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "run", "start", "--workspace=api"]
+CMD ["npm", "run", "start", "--workspace=ai-server"]

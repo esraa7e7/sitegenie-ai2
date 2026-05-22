@@ -3,32 +3,32 @@ import crypto from 'crypto';
 /**
  * Generate a unique request ID for tracking
  */
-export function generateRequestId() {
-    return nanoid();
+export function generateRequestId(size = 21) {
+    return nanoid(size);
 }
 /**
  * Generate a unique task ID
  */
-export function generateTaskId() {
-    return `task_${nanoid()}`;
+export function generateTaskId(size = 21) {
+    return `task_${nanoid(size)}`;
 }
 /**
  * Generate a unique project ID
  */
-export function generateProjectId() {
-    return `proj_${nanoid()}`;
+export function generateProjectId(size = 21) {
+    return `proj_${nanoid(size)}`;
 }
 /**
  * Generate a unique deployment ID
  */
-export function generateDeploymentId() {
-    return `dep_${nanoid()}`;
+export function generateDeploymentId(size = 21) {
+    return `dep_${nanoid(size)}`;
 }
 /**
  * Generate a unique agent ID
  */
-export function generateAgentId(agentType) {
-    return `agent_${agentType}_${nanoid()}`;
+export function generateAgentId(agentType, size = 21) {
+    return `agent_${agentType}_${nanoid(size)}`;
 }
 /**
  * Generate a cryptographic secret

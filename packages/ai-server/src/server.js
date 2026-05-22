@@ -8,6 +8,7 @@ import { HfInference } from "@huggingface/inference";
 import { z } from "zod";
 import { jwtVerify, importSPKI } from "jose";
 import { WebsiteConfigSchema } from "@sitegenie/shared-types";
+import { initTracing, logger, runInSpan } from "@sitegenie/common";
 
 // Load env first
 dotenv.config();
@@ -34,6 +35,7 @@ try {
   process.exit(1);
 }
 
+const tracer = initTracing('sitegenie-ai-server');
 const hf = new HfInference(env.HF_TOKEN);
 
 const app = express();
@@ -154,43 +156,53 @@ export const generateSite = async (req, res) => {
       return res.status(400).json({ success: false, error: "Prompt rejected: potential injection detected" });
     }
 
-    const systemPrompt = `You are a strict, production-grade JSON generator. Your sole purpose is to output valid, minified JSON that represents a website configuration. The JSON you output will directly populate a JavaScript object used to render a website. Therefore, it MUST be perfectly formed, with no extraneous characters, comments, or explanations. Do NOT include any markdown formatting like \\`\\`\\`json. Just the raw, minified JSON. The JSON should conform to the WebsiteConfig type definition.`;
+    const systemPrompt = 'You are a strict, production-grade JSON generator. Your sole purpose is to output valid, minified JSON that represents a website configuration. The JSON you output will directly populate a JavaScript object used to render a website. Therefore, it MUST be perfectly formed, with no extraneous characters, comments, or explanations. Do NOT include any markdown formatting. Just the raw, minified JSON. The JSON should conform to the WebsiteConfig type definition.';
 
-    const hfPromise = hf.chatCompletion({
-      model: "Qwen/Qwen3.6-35B-A3B",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate a custom website for: ${userPrompt}` }
-      ],
-      max_tokens: 2000,
-      temperature: 0.2
-    });
+    const websiteConfig = await runInSpan(
+      "generateSite",
+      async () => {
+        const hfPromise = hf.chatCompletion({
+          model: "Qwen/Qwen3.6-35B-A3B",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: "Generate a custom website for: " + userPrompt }
+          ],
+          max_tokens: 2000,
+          temperature: 0.2
+        });
 
-    const response = await withTimeout(hfPromise);
+        const response = await withTimeout(hfPromise);
+        const aiText = (response?.choices?.[0]?.message?.content || "").trim();
 
-    const aiText = (response?.choices?.[0]?.message?.content || "").trim();
+        if (!aiText || !/^[\[{]/.test(aiText)) {
+          logger.error("AI response not JSON-like", { sample: aiText?.slice(0, 200) });
+          throw new Error("Invalid AI response format");
+        }
 
-    if (!aiText || !/^[\[{]/.test(aiText)) {
-      console.error("AI response not JSON-like:", aiText?.slice(0, 200));
-      return res.status(502).json({ success: false, error: "Invalid AI response format" });
-    }
+        let cleanJsonData;
+        try {
+          cleanJsonData = JSON.parse(aiText);
+        } catch (err) {
+          logger.error("AI JSON parse error", { error: err });
+          throw new Error("AI returned malformed JSON");
+        }
 
-    // Safe JSON parse
-    let cleanJsonData;
-    try {
-      cleanJsonData = JSON.parse(aiText);
-    } catch (err) {
-      console.error("AI JSON parse error:", err);
-      return res.status(502).json({ success: false, error: "AI returned malformed JSON" });
-    }
+        const websiteConfigValidation = WebsiteConfigSchema.safeParse(cleanJsonData);
+        if (!websiteConfigValidation.success) {
+          logger.error("WebsiteConfig validation failed", { validation: websiteConfigValidation.error.format() });
+          throw new Error("AI returned JSON that does not match the expected website configuration schema");
+        }
 
-    const websiteConfigValidation = WebsiteConfigSchema.safeParse(cleanJsonData);
-    if (!websiteConfigValidation.success) {
-      console.error("WebsiteConfig validation failed:", websiteConfigValidation.error.format());
-      return res.status(502).json({ success: false, error: "AI returned JSON that does not match the expected website configuration schema" });
-    }
+        return websiteConfigValidation.data;
+      },
+      {
+        route: "/generate",
+        userPromptLength: userPrompt.length,
+        model: "Qwen/Qwen3.6-35B-A3B"
+      }
+    );
 
-    return res.status(200).json({ success: true, websiteConfig: websiteConfigValidation.data });
+    return res.status(200).json({ success: true, websiteConfig });
 
   } catch (error) {
     console.error("Generation error:", error);
@@ -208,10 +220,10 @@ app.get("/", (_req, res) => {
 const PORT = Number(env.PORT || 3000);
 
 app.listen(PORT, () => {
-  console.log(`🚀 SiteGenie AI Backend Started Successfully!`);
-  console.log(`Node Version: ${process.version}`);
-  console.log(`Environment: ${env.NODE_ENV}`);
-  console.log(`Server listening on port ${PORT}`);
+  console.log('SiteGenie AI Backend Started Successfully!');
+  console.log('Node Version: ' + process.version);
+  console.log('Environment: ' + env.NODE_ENV);
+  console.log('Server listening on port ' + PORT);
 });
 
 export default app;

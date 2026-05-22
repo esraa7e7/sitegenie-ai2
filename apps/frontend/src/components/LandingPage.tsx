@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 
 interface LandingPageProps {
-  setView: (view: 'dashboard') => void;
+  setView?: (view: 'dashboard') => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ setView }) => {
@@ -63,7 +63,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setView }) => {
 
           <div className="border-b border-slate-800 px-5 pb-4">
             <button
-              onClick={() => setView('dashboard')}
+              onClick={() => setView?.('dashboard')}
               className="flex w-full items-center justify-center gap-3 rounded-3xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm font-semibold text-slate-100 hover:border-slate-700 hover:bg-slate-800 transition"
             >
               <Zap className="h-4 w-4 text-indigo-400" />

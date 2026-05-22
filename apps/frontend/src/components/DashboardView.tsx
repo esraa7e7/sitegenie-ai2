@@ -16,9 +16,9 @@ interface Project {
 export const DashboardView: React.FC = () => {
   const navigate = useNavigate();
 
-  const { data: projects, isLoading, error } = useQuery<Project[]>({ // Specify type
+  const { data: projects, isLoading, error } = useQuery<Project[], Error>({
     queryKey: ['projects'],
-    queryFn: projectApi.list,
+    queryFn: async () => projectApi.list(),
     onError: (err: any) => {
       toast.error(err.message || 'Failed to load projects.');
     },

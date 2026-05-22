@@ -233,7 +233,8 @@ export interface AgentOutput {
   result: string;
   code?: ProjectCode;
   suggestions?: string[];
-  metadata: Record<string, unknown>;
+  outputFormat?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AgentError {
