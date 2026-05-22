@@ -4,22 +4,22 @@
  */
 
 import { BaseAgent } from './BaseAgent.js';
+import { AgentType } from "@sitegenie/shared";
 import type { AgentInput, AgentOutput, ProjectCode } from '@sitegenie/shared';
 
 const createCodeFile = (language: string, path: string, content: string): ProjectCode => {
-  return {
-    [language]: {
-      language,
-      fileName: path.split('/').pop() || path,
-      path,
-      content,
-    },
-  } as ProjectCode;
+  const codeFile = {
+    language,
+    fileName: path.split('/').pop() || path,
+    path,
+    content,
+  };
+  return { [language]: codeFile };
 };
 
 export class PlannerAgent extends BaseAgent {
   constructor() {
-    super('planner');
+    super(AgentType.PLANNER);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -40,7 +40,7 @@ export class PlannerAgent extends BaseAgent {
 
 export class UIAgent extends BaseAgent {
   constructor() {
-    super('ui');
+    super(AgentType.UI);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -50,7 +50,8 @@ export class UIAgent extends BaseAgent {
         'react',
         'src/App.tsx',
         `import React from 'react';\n\nexport function App() {\n  return (\n    <main className='min-h-screen bg-slate-950 text-white p-6'>\n      <section className='mx-auto max-w-5xl rounded-3xl border border-slate-800 bg-slate-900/95 p-8 shadow-xl'>\n        <h1 className='text-4xl font-bold'>Welcome to your SiteGenie app</h1>\n        <p className='mt-4 text-slate-300'>This generated interface is ready for real-time preview and live editing.</p>\n      </section>\n    </main>\n  );\n}\n`
-      ),
+      },
+      outputFormat: 'react',
       suggestions: ['Add navigation', 'Implement responsive layouts', 'Use accessible components'],
       metadata: {
         uiFramework: 'React',
@@ -62,7 +63,7 @@ export class UIAgent extends BaseAgent {
 
 export class BackendAgent extends BaseAgent {
   constructor() {
-    super('backend');
+    super(AgentType.BACKEND);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -72,7 +73,8 @@ export class BackendAgent extends BaseAgent {
         'typescript',
         'src/server.ts',
         `import express from 'express';\nimport cors from 'cors';\n\nconst app = express();\napp.use(cors());\napp.use(express.json());\n\napp.get('/health', (req, res) => res.json({ status: 'ok' }));\n\napp.listen(4000, () => console.log('Backend server running on port 4000'));\n`
-      ),
+      },
+      outputFormat: 'typescript',
       suggestions: ['Add authenticated endpoints', 'Validate request payloads'],
       metadata: {
         endpoints: ['/health'],
@@ -83,7 +85,7 @@ export class BackendAgent extends BaseAgent {
 
 export class APIAgent extends BaseAgent {
   constructor() {
-    super('api');
+    super(AgentType.API);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -93,7 +95,8 @@ export class APIAgent extends BaseAgent {
         'typescript',
         'src/api/routes.ts',
         `import { Router } from 'express';\nconst router = Router();\n\nrouter.get('/status', (req, res) => res.json({ status: 'healthy' }));\n\nexport default router;\n`
-      ),
+      },
+      outputFormat: 'typescript',
       suggestions: ['Add request handlers', 'Document API schema'],
       metadata: {
         endpoints: ['/status'],
@@ -104,7 +107,7 @@ export class APIAgent extends BaseAgent {
 
 export class RefactorAgent extends BaseAgent {
   constructor() {
-    super('refactor');
+    super(AgentType.REFACTOR);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -120,7 +123,7 @@ export class RefactorAgent extends BaseAgent {
 
 export class DebugAgent extends BaseAgent {
   constructor() {
-    super('debug');
+    super(AgentType.DEBUG);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -136,7 +139,7 @@ export class DebugAgent extends BaseAgent {
 
 export class SecurityAgent extends BaseAgent {
   constructor() {
-    super('security');
+    super(AgentType.SECURITY);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -152,7 +155,7 @@ export class SecurityAgent extends BaseAgent {
 
 export class TestingAgent extends BaseAgent {
   constructor() {
-    super('testing');
+    super(AgentType.TESTING);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -162,7 +165,8 @@ export class TestingAgent extends BaseAgent {
         'typescript',
         'tests/app.test.ts',
         `import { describe, it, expect } from 'vitest';\n\ndescribe('SiteGenie generated app', () => {\n  it('should start without crashing', () => {\n    expect(true).toBe(true);\n  });\n});\n`
-      ),
+      },
+      outputFormat: 'typescript',
       suggestions: ['Add integration tests', 'Validate developer workflows'],
       metadata: {
         testCount: 1,
@@ -173,7 +177,7 @@ export class TestingAgent extends BaseAgent {
 
 export class DeploymentAgent extends BaseAgent {
   constructor() {
-    super('deployment');
+    super(AgentType.DEPLOYMENT);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -199,7 +203,7 @@ export class DeploymentAgent extends BaseAgent {
 
 export class MemoryAgent extends BaseAgent {
   constructor() {
-    super('memory');
+    super(AgentType.MEMORY);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {
@@ -215,7 +219,7 @@ export class MemoryAgent extends BaseAgent {
 
 export class OptimizationAgent extends BaseAgent {
   constructor() {
-    super('optimization');
+    super(AgentType.OPTIMIZATION);
   }
 
   async execute(projectId: string, input: AgentInput): Promise<AgentOutput> {

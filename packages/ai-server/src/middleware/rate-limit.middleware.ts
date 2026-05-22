@@ -1,7 +1,9 @@
 import { rateLimit } from 'express-rate-limit';
+// @ts-ignore
 import { RedisStore } from 'rate-limit-redis';
 import { Request } from 'express';
 import { redis } from '../core/redis.js';
+import { string } from 'zod';
 
 const createStore = (prefix?: string) => {
   if (!redis) return undefined;
@@ -23,9 +25,9 @@ export const apiLimiter = rateLimit({
     message: 'Too many requests from this IP, please try again after 15 minutes',
     code: 429
   },
-  keyGenerator: (req: Request) => {
-    return (req as any).user?.userId || req.ip;
-  }
+ keyGenerator: (req: any) => {
+    return String(req.user?.userId || req.ip || '');
+  },
 });
 
 export const aiGenerationLimiter = rateLimit({

@@ -3,16 +3,16 @@
  * Provides common functionality for agent communication, error handling, and context management
  */
 
-import { generateAgentId, generateTaskId, getTimeDifferenceInSeconds } from '@sitegenie/shared';
+import { nanoid } from "nanoid";
+import { AgentPriority, AgentType, TaskStatus } from "@sitegenie/shared";
 import type {
   AgentTask,
-  AgentType,
-  TaskStatus,
   AgentInput,
   AgentOutput,
   AgentError,
   ContextWindow,
-} from '@sitegenie/shared';
+} from "@sitegenie/shared";
+import { generateTaskId, getTimeDifferenceInSeconds } from "@sitegenie/shared";
 
 export abstract class BaseAgent {
   readonly agentId: string;
@@ -22,7 +22,7 @@ export abstract class BaseAgent {
 
   constructor(agentType: AgentType) {
     this.agentType = agentType;
-    this.agentId = generateAgentId(agentType);
+    this.agentId = `agent_${agentType}_${nanoid(10)}`;
   }
 
   /**
@@ -35,13 +35,14 @@ export abstract class BaseAgent {
       agentId: this.agentId,
       agentType: this.agentType,
       projectId,
-      status: 'pending' as TaskStatus,
+      status: TaskStatus.PENDING,
       input,
+      createdAt: new Date(),
       metadata: {
         tokensUsed: 0,
         executionTime: 0,
         retryCount: 0,
-        priority: input.constraints?.priority || 'normal',
+        priority: (input.constraints?.priority as AgentPriority) || "normal",
       },
     };
   }
@@ -62,13 +63,13 @@ export abstract class BaseAgent {
     try {
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
-          task.status = 'processing' as TaskStatus;
+          task.status = TaskStatus.PROCESSING;
           task.startedAt = new Date();
 
           const output = await this.execute(task.projectId, task.input);
 
           task.output = output;
-          task.status = 'completed' as TaskStatus;
+          task.status = TaskStatus.COMPLETED;
           task.completedAt = new Date();
 
           return task;
@@ -77,13 +78,13 @@ export abstract class BaseAgent {
             throw error;
           }
           task.metadata.retryCount = attempt;
-          task.status = 'retry' as TaskStatus;
+          task.status = TaskStatus.RETRY;
           // Exponential backoff: 1s, 2s, 4s...
           await new Promise((resolve) => setTimeout(resolve, Math.pow(2, attempt) * 1000));
         }
       }
     } catch (error) {
-      task.status = 'failed' as TaskStatus;
+      task.status = TaskStatus.FAILED;
       task.error = this.parseError(error);
       task.completedAt = new Date();
     } finally {
@@ -100,17 +101,17 @@ export abstract class BaseAgent {
   protected parseError(error: unknown): AgentError {
     if (error instanceof Error) {
       return {
-        code: 'AGENT_ERROR',
+        code: "AGENT_ERROR",
         message: error.message,
-        severity: 'high',
+        severity: "high",
         recoverable: true,
       };
     }
 
     return {
-      code: 'UNKNOWN_ERROR',
+      code: "UNKNOWN_ERROR",
       message: String(error),
-      severity: 'high',
+      severity: "high",
       recoverable: false,
     };
   }
@@ -137,7 +138,7 @@ export abstract class BaseAgent {
    */
   cancelCurrentTask(): void {
     if (this.currentTask) {
-      this.currentTask.status = 'cancelled' as TaskStatus;
+      this.currentTask.status = TaskStatus.CANCELLED;
     }
   }
 }

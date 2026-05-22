@@ -1,36 +1,50 @@
-import { WorkspaceFile, AgentLog } from './types.js';
+import type { ProjectCode, ProjectVersion, ContextWindow } from "@sitegenie/shared";
+import { AgentOutput } from "@sitegenie/shared";
 
 export class ContextMemory {
-  private history: string[] = [];
-  private files: Record<string, string> = {};
-  private logs: AgentLog[] = [];
+    private memory: ContextWindow;
 
-  updateFiles(newFiles: Record<string, string>) {
-    this.files = { ...this.files, ...newFiles };
-  }
+    constructor() {
+        this.memory = {
+            projectCode: {},
+            projectHistory: [],
+            userPreferences: {},
+            previousAgentOutputs: {},
+            currentState: {},
+        };
+    }
 
-  addLog(log: AgentLog) {
-    this.logs.push(log);
-  }
+    public updateProjectCode(code: ProjectCode): void {
+        this.memory.projectCode = { ...this.memory.projectCode, ...code };
+    }
 
-  addHistory(entry: string) {
-    this.history.push(entry);
-  }
+    public addProjectHistory(version: ProjectVersion): void {
+        this.memory.projectHistory.push(version);
+    }
 
-  getFiles() {
-    return this.files;
-  }
+    public updateUserPreferences(preferences: Record<string, unknown>): void {
+        this.memory.userPreferences = { ...this.memory.userPreferences, ...preferences };
+    }
 
-  getLogs() {
-    return this.logs;
-  }
+    public updatePreviousAgentOutput(agentType: string, output: AgentOutput): void {
+        this.memory.previousAgentOutputs[agentType] = output;
+    }
 
-  getFullContext() {
-    return `
-      System Context:
-      - Execution History: ${this.history.join('\n')}
-      - Files in Workspace: ${Object.keys(this.files).join(', ')}
-      - Recent Activity: ${this.logs.slice(-5).map(l => l.message).join(' | ')}
-    `.trim();
-  }
+    public updateCurrentState(state: Record<string, unknown>): void {
+        this.memory.currentState = { ...this.memory.currentState, ...state };
+    }
+
+    public getMemory(): ContextWindow {
+        return this.memory;
+    }
+
+    public resetMemory(): void {
+        this.memory = {
+            projectCode: {},
+            projectHistory: [],
+            userPreferences: {},
+            previousAgentOutputs: {},
+            currentState: {},
+        };
+    }
 }

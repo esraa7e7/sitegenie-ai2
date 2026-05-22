@@ -4,7 +4,20 @@
  */
 
 import { nanoid } from 'nanoid';
-import type { AgentTask, AgentInput, ContextWindow, Project, ProjectCode } from '@sitegenie/shared';
+import { nanoid } from 'nanoid';
+import { AgentType, ProjectType, ProjectStatus } from "@sitegenie/shared";
+import type {
+  AgentTask,
+  AgentInput,
+  ContextWindow,
+  Project,
+  ProjectCode,
+  ThemeConfig,
+  SEOConfig,
+  AnalyticsConfig,
+  ProjectMetadata,
+} from '@sitegenie/shared';
+import { generateAgentId, generateTaskId, getTimeDifferenceInSeconds } from '@sitegenie/shared';
 import { BaseAgent } from './agents/BaseAgent.js';
 import { ContextMemory } from './memory.js';
 import {
@@ -114,35 +127,42 @@ export class AgentOrchestrator {
       id: projectId,
       name: `SiteGenie Project ${projectId.slice(-6)}`,
       description: `Generated website from prompt: ${prompt}`,
-      type: 'web',
-      status: 'completed',
+      type: 'website' as ProjectType,
+      status: 'ACTIVE' as ProjectStatus,
       ownerId: 'system',
       initialPrompt: prompt,
       generatedCode,
       settings: {
         theme: {
-          primary: '#5b21b6',
-          secondary: '#ec4899',
-          accent: '#38bdf8',
-        },
+          primaryColor: '#5b21b6',
+          secondaryColor: '#ec4899',
+          accentColor: '#38bdf8',
+          fontFamily: 'Inter, sans-serif',
+          darkMode: true,
+        } as ThemeConfig,
         responsive: true,
         seo: {
           title: `SiteGenie - ${projectId.slice(-6)}`,
           description: 'Auto-generated website powered by AI.',
-          canonicalUrl: '',
-        },
+          keywords: ['AI', 'website generator', 'SiteGenie'],
+          ogImage: '',
+        } as SEOConfig,
         analytics: {
           enabled: false,
-          provider: 'none',
-          trackingId: '',
-        },
+        } as AnalyticsConfig,
       },
       metadata: {
+        fileCount: 0,
+        componentCount: 0,
+        lineOfCode: 0,
+        complexity: 'medium',
+        libraries: [],
+        tags: [],
         version: '1.0.0',
         createdAt: new Date(),
         updatedAt: new Date(),
         lastModifiedBy: 'sitegenie-orchestrator',
-      },
+      } as ProjectMetadata,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -175,12 +195,14 @@ export class AgentOrchestrator {
     const task = agent.createTask(projectId, input);
     const result = await agent.processTask(task, this.config.maxRetries);
     this.executionHistory.push(result);
-    this.contextWindow.previousAgentOutputs[agent.agentType] = result.output;
-    this.contextWindow.currentState = {
-      ...this.contextWindow.currentState,
-      lastAgent: agent.agentType,
-      lastResult: result.output.result,
-    };
+    if (result.output) {
+      this.contextWindow.previousAgentOutputs[agent.agentType] = result.output;
+      this.contextWindow.currentState = {
+        ...this.contextWindow.currentState,
+        lastAgent: agent.agentType,
+        lastResult: result.output.result,
+      };
+    }
 
     if (result.status === 'failed') {
       throw new Error(`${stage} failed: ${result.error?.message || 'unknown error'}`);
@@ -231,8 +253,8 @@ export class AgentOrchestrator {
       {
         previousResults: {
           ...this.contextWindow.previousAgentOutputs,
-          security: securityResult.output,
-          testing: testingResult.output,
+          security: securityResult.output!,
+          testing: testingResult.output!,
         },
       }
     );
@@ -242,13 +264,13 @@ export class AgentOrchestrator {
     onProgress?.('DEPLOY: Preparing deployment manifest and CI/CD flow...');
 
     const generatedCode = this.mergeProjectCode(
-      uiResult.output.code,
-      backendResult.output.code,
-      apiResult.output.code,
-      refactorResult.output.code,
-      securityResult.output.code,
-      testingResult.output.code,
-      optimizationResult.output.code
+      uiResult.output?.code,
+      backendResult.output?.code,
+      apiResult.output?.code,
+      refactorResult.output?.code,
+      securityResult.output?.code,
+      testingResult.output?.code,
+      optimizationResult.output?.code
     );
 
     const project = this.buildProject(projectId, prompt, generatedCode);
@@ -258,7 +280,7 @@ export class AgentOrchestrator {
       project,
       tasks: this.executionHistory,
       files,
-      summary: planResult.output.result,
+      summary: planResult.output?.result,
       confidenceScore: 92,
     };
   }
@@ -299,5 +321,3 @@ export class AgentOrchestrator {
     };
   }
 }
-
-

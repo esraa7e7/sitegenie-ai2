@@ -244,11 +244,13 @@ export interface AgentError {
   suggestion?: string;
 }
 
+export type AgentPriority = "low" | "normal" | "high";
+
 export interface TaskMetadata {
   tokensUsed: number;
   executionTime: number;
   retryCount: number;
-  priority: 'low' | 'normal' | 'high';
+  priority: AgentPriority;
   batchId?: string;
 }
 

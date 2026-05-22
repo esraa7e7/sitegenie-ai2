@@ -14,7 +14,8 @@
     "dev": "tsc -w"
   },
   "dependencies": {
-    "nanoid": "^4.0.2"
+    "nanoid": "^5.1.11",
+    "uuid": "14.0.0"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

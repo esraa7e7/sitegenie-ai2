@@ -37,7 +37,7 @@ export class UsageService {
     return {
       totalRequests: auditLogs,
       sandboxHours: usage?.sandboxHours || 0,
-      projectCount: usage?.tenant?.projects?.length || 0,
+      projectCount: (usage as any)?.tenant?.projects?.length || 0,
     };
   }
 }

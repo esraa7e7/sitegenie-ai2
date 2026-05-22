@@ -1,6 +1,7 @@
+// @ts-ignore
 import * as Sentry from "@sentry/node";
+// @ts-ignore
 import { PostHog } from 'posthog-node';
-
 export class ObservabilityService {
   private static posthog = new PostHog(process.env.POSTHOG_API_KEY || '', {
     host: 'https://app.posthog.com',
@@ -32,7 +33,7 @@ export class ObservabilityService {
 
   static logError(error: any, context: Record<string, any> = {}) {
     console.error(`[Error] ${error.message}`, context);
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope: any) => {
       scope.setExtras(context);
       Sentry.captureException(error);
     });

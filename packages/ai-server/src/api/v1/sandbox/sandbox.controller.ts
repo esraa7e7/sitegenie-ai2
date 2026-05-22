@@ -46,6 +46,7 @@ export class SandboxController {
         return res.status(400).json({ status: 'error', message: 'Code is required for execution' });
       }
 
+      // @ts-ignore
       const result = await SandboxService.executeCode(id, code, language);
       
       res.json({

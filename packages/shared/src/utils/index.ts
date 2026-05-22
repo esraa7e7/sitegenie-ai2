@@ -4,36 +4,36 @@ import crypto from 'crypto';
 /**
  * Generate a unique request ID for tracking
  */
-export function generateRequestId(): string {
-  return nanoid();
+export function generateRequestId(size: number = 21): string {
+  return nanoid(size);
 }
 
 /**
  * Generate a unique task ID
  */
-export function generateTaskId(): string {
-  return `task_${nanoid()}`;
+export function generateTaskId(size: number = 21): string {
+  return `task_${nanoid(size)}`;
 }
 
 /**
  * Generate a unique project ID
  */
-export function generateProjectId(): string {
-  return `proj_${nanoid()}`;
+export function generateProjectId(size: number = 21): string {
+  return `proj_${nanoid(size)}`;
 }
 
 /**
  * Generate a unique deployment ID
  */
-export function generateDeploymentId(): string {
-  return `dep_${nanoid()}`;
+export function generateDeploymentId(size: number = 21): string {
+  return `dep_${nanoid(size)}`;
 }
 
 /**
  * Generate a unique agent ID
  */
-export function generateAgentId(agentType: string): string {
-  return `agent_${agentType}_${nanoid()}`;
+export function generateAgentId(agentType: string, size: number = 21): string {
+  return `agent_${agentType}_${nanoid(size)}`;
 }
 
 /**
@@ -234,10 +234,10 @@ export function isEmpty(value: unknown): boolean {
  * Pick specific properties from object
  */
 export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
-  const result = {} as Pick<T, K>;
+  const result: Pick<T, K> = {} as Pick<T, K>; // Initialize with a type assertion
   keys.forEach((key) => {
-    if (key in obj) {
-      result[key] = obj[key] as Pick<T, K>[K];
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      result[key] = obj[key];
     }
   });
   return result;
@@ -246,10 +246,14 @@ export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pi
 /**
  * Omit specific properties from object
  */
-export function omit<T, K extends keyof T>(obj: T, keys: K[]): Partial<T> {
-  const result: Partial<T> = { ...obj };
-  keys.forEach((key) => {
-    delete result[key];
-  });
+export function omit<T extends Record<string, unknown>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+  const result: Omit<T, K> = {} as Omit<T, K>;
+
+  for (const key of Object.keys(obj) as Array<keyof T>) {
+    if (!keys.includes(key as K)) {
+      result[key as keyof Omit<T, K>] = obj[key] as T[keyof Omit<T, K>];
+    }
+  }
+
   return result;
 }

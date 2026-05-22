@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/server.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.0",
@@ -23,7 +24,12 @@
     "openai": "^4.73.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.8.0",
+    "xss-clean": "^0.1.1",
+    "jose": "^5.9.6",
+    "@sitegenie/shared-types": "workspace:1.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

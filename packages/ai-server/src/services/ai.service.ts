@@ -4,12 +4,12 @@ import { AgentOrchestrator } from '@sitegenie/ai-core/src/orchestrator.js';
 
 export class AIService {
   private static orchestrator = new AgentOrchestrator({
-    GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-    GROQ_API_KEY: process.env.GROQ_API_KEY || '',
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
-    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || '',
-    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || ''
-  });
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
+    GROQ_API_KEY: process.env.GROQ_API_KEY || "",
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || "",
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || "",
+  } as any);
 
   static async generateCode(projectId: string, prompt: string, onProgress?: (status: string) => void) {
     const { SocketService } = await import('../core/socket.js');

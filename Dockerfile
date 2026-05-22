@@ -1,5 +1,5 @@
 # Stage 1: Builder
-FROM node:22-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 RUN apk add --no-cache openssl openssl-dev libc6-compat dumb-init libatomic
@@ -25,7 +25,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Stage 2: Runner
-FROM node:22-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 RUN apk add --no-cache dumb-init libatomic openssl
